@@ -31,7 +31,10 @@ public class MyBot : IChessBot
         int[] best = new int[]{-1, int.MinValue};
 
         for(int i = 0; i < captures.Length; i++) {
-            int value = ((int)captures[0].CapturePieceType);
+            int value = (int)captures[i].CapturePieceType;
+            if(BOARD.SquareIsAttackedByOpponent(captures[i].TargetSquare)) {
+                value -= (int)captures[i].MovePieceType;
+            }
             if(value > best[1]) {
                 best = new int[]{i, value};
             }
