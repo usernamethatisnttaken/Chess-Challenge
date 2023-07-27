@@ -20,7 +20,7 @@ public class MyBot : IChessBot
             return neutral(board);
         } if((int)atk_best[1] >= (int)dfc_best[1]) {
             return (Move)atk_best[0];
-        } return (Move)dfc_best[0];
+        } /*return (Move)dfc_best[0];*/ return neutral(board);
     }
 
     /// <summary>
