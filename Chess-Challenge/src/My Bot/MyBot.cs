@@ -11,10 +11,10 @@ public class MyBot : IChessBot
     */
     public Move Think(Board board, Timer timer)
     {
-        DEFAULT = board.GetLegalMoves()[0];
+        DEFAULT = board.GetLegalMoves()[(int)((new System.Random()).NextDouble() * board.GetLegalMoves().Length)];
 
         object[] atk_best = doAttack(board);
-        object[] dfc_best = doDefense(board);
+        object[] dfc_best = new object[]{-1, int.MinValue};//doDefense(board);
 
         if(atk_best[1].Equals(int.MinValue) && dfc_best[1].Equals(int.MinValue)) {
             return neutral(board);
@@ -91,7 +91,7 @@ public class MyBot : IChessBot
             int value = 0;
             if(moves[i].MovePieceType == PieceType.Pawn) {
                 value = 100;
-            } else {
+            } else if (moves[i].MovePieceType != PieceType.King) {
                 if(!board.SquareIsAttackedByOpponent(moves[i].TargetSquare)) {
                     int target_val = taxicabDist(moves[i].TargetSquare, enemy_king_pos);
                     value = target_val < taxicabDist(moves[i].StartSquare, enemy_king_pos) ? 100 - target_val : 0;
@@ -102,6 +102,24 @@ public class MyBot : IChessBot
             }
         }
         return best[0] >= 0 ? moves[best[0]] : DEFAULT;
+        // Move[] neutral = board.GetLegalMoves();
+        // int[] best = new int[]{-1, int.MinValue};
+        // Square king_pos = board.GetKingSquare(!board.IsWhiteToMove);
+        // for(int i = 0; i < neutral.Length; i++) {
+        //     int value = 0;
+        //     if(neutral[i].MovePieceType == PieceType.Pawn) {
+        //         value = 100;
+        //     } else {
+        //         if(!board.SquareIsAttackedByOpponent(neutral[i].TargetSquare)) {
+        //             int target_val = taxicabDist(neutral[i].TargetSquare, king_pos);
+        //             value = target_val < taxicabDist(neutral[i].StartSquare, king_pos) ? 100 - target_val : 0;
+        //         }
+        //     }
+        //     if(value > best[1]) {
+        //         best = new int[]{i, value};
+        //     }
+        // }
+        // return best[0] >= 0 ? neutral[best[0]] : DEFAULT;
     }
 
     /// <summary>
